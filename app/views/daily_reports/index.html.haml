@@ -1,2 +1,55 @@
-%h1 DailyReports#index
-%p Find me in app/views/daily_reports/index.html.haml
+- content_for :title, "マイ日報一覧"
+
+.d-flex.justify-content-between.align-items-center.mb-4
+  %h1.h2 マイ日報
+  = link_to "新しい日報を作成", new_daily_report_path, class: "btn btn-primary"
+
+.row.mb-3
+  .col-md-8
+    = form_with url: daily_reports_path, method: :get, local: true, class: "d-flex" do |f|
+      = f.date_field :start_date, value: params[:start_date], class: "form-control me-2", placeholder: "開始日"
+      = f.date_field :end_date, value: params[:end_date], class: "form-control me-2", placeholder: "終了日"
+      = f.submit "絞り込み", class: "btn btn-outline-primary me-2"
+      = link_to "リセット", daily_reports_path, class: "btn btn-outline-secondary"
+
+- if @daily_reports.any?
+  .row
+    - @daily_reports.each do |report|
+      .col-md-6.col-lg-4.mb-4
+        .card.daily-report-card.h-100
+          .card-body
+            .d-flex.justify-content-between.align-items-start.mb-2
+              %h5.card-title.mb-0
+                = link_to report.date.strftime("%Y年%m月%d日"), report, class: "text-decoration-none"
+              %span.badge{class: report.is_public? ? "bg-success" : "bg-secondary"}
+                = report.status_text
+            
+            .mb-2
+              %strong.text-muted 作業内容：
+              %p.card-text.small
+                = truncate(report.work_content, length: 100)
+            
+            .mb-2
+              %strong.text-muted 学んだ点：
+              %p.card-text.small
+                = truncate(report.learned_points, length: 80)
+            
+            .card-footer.bg-transparent.border-0.pt-0
+              .btn-group.w-100{role: "group"}
+                = link_to "詳細", report, class: "btn btn-outline-primary btn-sm"
+                = link_to "編集", edit_daily_report_path(report), class: "btn btn-outline-secondary btn-sm"
+                = link_to "削除", report, method: :delete, 
+                          confirm: "本当に削除しますか？", 
+                          class: "btn btn-outline-danger btn-sm"
+
+  .d-flex.justify-content-center.mt-4
+    = paginate @daily_reports if respond_to?(:paginate)
+
+- else
+  .text-center.mt-5
+    .card.mx-auto{style: "max-width: 500px;"}
+      .card-body.py-5
+        %i.fas.fa-calendar-alt.fa-3x.text-muted.mb-3
+        %h5.card-title まだ日報がありません
+        %p.card-text.text-muted 最初の日報を作成して、学習の記録を始めましょう！
+        = link_to "日報を作成する", new_daily_report_path, class: "btn btn-primary"

@@ -46,3 +46,13 @@ body {
   border: none;
   border-radius: 8px;
 }
+
+.hover-bg-light:hover {
+  background-color: #f8f9fa !important;
+  cursor: pointer;
+}
+
+.required::after {
+  content: " *";
+  color: #dc3545;
+}

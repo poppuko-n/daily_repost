@@ -1,2 +1,86 @@
-%h1 DailyReports#show
-%p Find me in app/views/daily_reports/show.html.haml
+- content_for :title, "#{@daily_report.date.strftime('%Y年%m月%d日')}の日報"
+
+.row
+  .col-lg-8
+    .card.mb-4
+      .card-header.d-flex.justify-content-between.align-items-center
+        %h4.mb-0
+          %i.fas.fa-calendar-day.me-2
+          = @daily_report.date.strftime("%Y年%m月%d日")の日報
+        %span.badge{class: @daily_report.is_public? ? "bg-success" : "bg-secondary"}
+          = @daily_report.status_text
+      
+      .card-body
+        .row.mb-4
+          .col-md-6
+            %small.text-muted 作成者
+            %p.mb-0
+              = link_to @daily_report.user.display_name_or_username, 
+                        user_path(@daily_report.user), 
+                        class: "text-decoration-none"
+          .col-md-6.text-md-end
+            %small.text-muted 作成日時
+            %p.mb-0= @daily_report.created_at.strftime("%Y年%m月%d日 %H:%M")
+        
+        .mb-4
+          %h5.border-bottom.pb-2
+            %i.fas.fa-tasks.me-2.text-primary
+            作業内容
+          .bg-light.p-3.rounded
+            = simple_format(@daily_report.work_content)
+        
+        .mb-4
+          %h5.border-bottom.pb-2
+            %i.fas.fa-lightbulb.me-2.text-warning
+            学んだ点
+          .bg-light.p-3.rounded
+            = simple_format(@daily_report.learned_points)
+        
+        .mb-4
+          %h5.border-bottom.pb-2
+            %i.fas.fa-arrow-up.me-2.text-success
+            もっとよくできる点
+          .bg-light.p-3.rounded
+            = simple_format(@daily_report.improvements)
+      
+      - if @daily_report.user == current_user
+        .card-footer.bg-light
+          .btn-group{role: "group"}
+            = link_to "編集", edit_daily_report_path(@daily_report), 
+                      class: "btn btn-outline-warning"
+            = link_to "削除", @daily_report, method: :delete, 
+                      confirm: "本当に削除しますか？", 
+                      class: "btn btn-outline-danger"
+            = link_to "一覧に戻る", daily_reports_path, 
+                      class: "btn btn-outline-secondary"
+
+  .col-lg-4
+    - if @related_reports.any?
+      .card
+        .card-header.bg-info.text-white
+          %h6.mb-0
+            %i.fas.fa-link.me-2
+            関連する日報 (#{@related_reports.count}件)
+        
+        .card-body.p-0
+          - @related_reports.each do |related_report|
+            .border-bottom.p-3.hover-bg-light
+              .d-flex.justify-content-between.align-items-start.mb-2
+                %h6.mb-0
+                  = link_to related_report.date.strftime("%m/%d"), 
+                            related_report, 
+                            class: "text-decoration-none"
+                %small.text-muted
+                  = related_report.user.display_name_or_username
+              %p.small.text-muted.mb-0
+                = truncate(related_report.learned_points, length: 80)
+        
+        .card-footer.text-center.bg-light
+          %small.text-muted
+            学んだ点の内容から関連する日報を表示しています
+    
+    - else
+      .card
+        .card-body.text-center
+          %i.fas.fa-search.fa-2x.text-muted.mb-3
+          %p.text-muted.mb-0 関連する日報が見つかりませんでした
