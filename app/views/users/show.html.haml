@@ -1,0 +1,84 @@
+- content_for :title, "#{@user.display_name_or_username}さんのプロフィール"
+
+.row
+  .col-lg-4.mb-4
+    .card
+      .card-body.text-center
+        - if @user.avatar_url.present?
+          %img.rounded-circle.mb-3{src: @user.avatar_url, alt: @user.display_name_or_username, width: 120, height: 120}
+        - else
+          %div.bg-secondary.rounded-circle.d-inline-flex.align-items-center.justify-content-center.mb-3{style: "width: 120px; height: 120px;"}
+            %i.fas.fa-user.fa-4x.text-white
+        
+        %h3.card-title.mb-1= @user.display_name_or_username
+        - if @user.display_name.present? && @user.display_name != @user.username
+          %p.text-muted.mb-3 @#{@user.username}
+        
+        - if @user.bio.present?
+          %p.card-text.mb-4= simple_format(@user.bio)
+        
+        .row.text-center.mb-4
+          .col-4
+            = link_to user_following_path(@user), class: "text-decoration-none text-dark" do
+              %div.fw-bold.fs-4= @user.following.count
+              %small.text-muted フォロー
+          .col-4
+            = link_to user_followers_path(@user), class: "text-decoration-none text-dark" do
+              %div.fw-bold.fs-4= @user.followers.count
+              %small.text-muted フォロワー
+          .col-4
+            %div.fw-bold.fs-4= @user.daily_reports.public_reports.count
+            %small.text-muted 日報
+        
+        - unless @user == current_user
+          .d-grid
+            - if current_user.following?(@user)
+              = link_to "フォロー中", user_follow_path(@user), 
+                        method: :delete, 
+                        class: "btn btn-success",
+                        confirm: "#{@user.display_name_or_username}さんのフォローを解除しますか？"
+            - else
+              = link_to "フォローする", user_follow_path(@user), 
+                        method: :post, 
+                        class: "btn btn-primary"
+
+  .col-lg-8
+    .d-flex.justify-content-between.align-items-center.mb-3
+      %h4
+        %i.fas.fa-calendar-alt.me-2
+        #{@user.display_name_or_username}さんの日報
+      %small.text-muted
+        公開日報のみ表示されています
+
+    - if @daily_reports.any?
+      - @daily_reports.each do |report|
+        .card.mb-3
+          .card-body
+            .d-flex.justify-content-between.align-items-start.mb-2
+              %h6.card-title.mb-0
+                = link_to report.date.strftime("%Y年%m月%d日"), report, class: "text-decoration-none"
+              %span.badge.bg-success= report.status_text
+            
+            .mb-2
+              %strong.text-muted 作業内容：
+              %p.card-text.small.mb-1
+                = truncate(report.work_content, length: 150)
+            
+            .mb-2
+              %strong.text-muted 学んだ点：
+              %p.card-text.small.mb-1
+                = truncate(report.learned_points, length: 120)
+            
+            .text-end
+              = link_to "詳細を見る", report, class: "btn btn-outline-primary btn-sm"
+
+      .d-flex.justify-content-center.mt-4
+        = paginate @daily_reports if respond_to?(:paginate)
+
+    - else
+      .card
+        .card-body.text-center.py-5
+          %i.fas.fa-calendar-alt.fa-3x.text-muted.mb-3
+          %h6.card-title まだ公開日報がありません
+          %p.card-text.text-muted
+            #{@user.display_name_or_username}さんの日報の投稿をお待ちください

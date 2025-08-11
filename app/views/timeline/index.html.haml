@@ -1,0 +1,75 @@
+- content_for :title, "タイムライン"
+
+.d-flex.justify-content-between.align-items-center.mb-4
+  %h1.h2
+    %i.fas.fa-stream.me-2
+    タイムライン
+  = link_to "ユーザーを探す", users_path, class: "btn btn-outline-primary"
+
+- if @following_count > 0
+  - if @daily_reports.any?
+    - @daily_reports.each do |report|
+      .card.mb-4
+        .card-header.d-flex.justify-content-between.align-items-center
+          .d-flex.align-items-center
+            - if report.user.avatar_url.present?
+              %img.rounded-circle.me-3{src: report.user.avatar_url, alt: report.user.display_name_or_username, width: 40, height: 40}
+            - else
+              %div.bg-secondary.rounded-circle.d-inline-flex.align-items-center.justify-content-center.me-3{style: "width: 40px; height: 40px;"}
+                %i.fas.fa-user.text-white
+            .d-flex.flex-column
+              %strong
+                = link_to report.user.display_name_or_username, report.user, class: "text-decoration-none"
+              %small.text-muted
+                = report.date.strftime("%Y年%m月%d日")
+          %span.badge.bg-success= report.status_text
+        
+        .card-body
+          .mb-3
+            %h6.border-bottom.pb-2
+              %i.fas.fa-tasks.me-2.text-primary
+              作業内容
+            %p= simple_format(truncate(report.work_content, length: 300))
+          
+          .mb-3
+            %h6.border-bottom.pb-2
+              %i.fas.fa-lightbulb.me-2.text-warning
+              学んだ点
+            %p= simple_format(truncate(report.learned_points, length: 250))
+          
+          - if report.improvements.length > 100
+            .mb-3
+              %h6.border-bottom.pb-2
+                %i.fas.fa-arrow-up.me-2.text-success
+                もっとよくできる点
+              %p= simple_format(truncate(report.improvements, length: 200))
+        
+        .card-footer.bg-transparent.d-flex.justify-content-between.align-items-center
+          %small.text-muted
+            投稿日時: #{report.created_at.strftime("%Y年%m月%d日 %H:%M")}
+          = link_to "詳細を見る", report, class: "btn btn-outline-primary btn-sm"
+
+    .d-flex.justify-content-center.mt-4
+      = paginate @daily_reports if respond_to?(:paginate)
+
+  - else
+    .text-center.mt-5
+      .card.mx-auto{style: "max-width: 600px;"}
+        .card-body.py-5
+          %i.fas.fa-calendar-times.fa-3x.text-muted.mb-3
+          %h5.card-title フォロー中のユーザーの日報がまだありません
+          %p.card-text.text-muted.mb-4
+            フォローしているユーザーが日報を投稿すると、ここに表示されます。
+            もう少し待ってみるか、新しいユーザーをフォローしてみましょう。
+          = link_to "ユーザーを探す", users_path, class: "btn btn-primary"
+
+- else
+  .text-center.mt-5
+    .card.mx-auto{style: "max-width: 600px;"}
+      .card-body.py-5
+        %i.fas.fa-user-friends.fa-3x.text-muted.mb-3
+        %h5.card-title まだ誰もフォローしていません
+        %p.card-text.text-muted.mb-4
+          他のユーザーをフォローして、彼らの学習の記録を見てみましょう。
+          新しい発見や学びがあるかもしれません。
+        = link_to "ユーザーを探す", users_path, class: "btn btn-primary"

@@ -1,0 +1,49 @@
+- content_for :title, "#{@user.display_name_or_username}さんのフォロワー"
+
+.d-flex.justify-content-between.align-items-center.mb-4
+  %h1.h4
+    %i.fas.fa-users.me-2
+    #{@user.display_name_or_username}さんのフォロワー
+    %span.badge.bg-primary.ms-2= @followers.total_count if respond_to?(:total_count)
+  = link_to "#{@user.display_name_or_username}さんのプロフィール", @user, class: "btn btn-outline-secondary"
+
+- if @followers.any?
+  .row
+    - @followers.each do |follower|
+      .col-md-6.col-lg-4.mb-3
+        .card
+          .card-body.text-center.py-3
+            - if follower.avatar_url.present?
+              %img.rounded-circle.mb-2{src: follower.avatar_url, alt: follower.display_name_or_username, width: 50, height: 50}
+            - else
+              %div.bg-secondary.rounded-circle.d-inline-flex.align-items-center.justify-content-center.mb-2{style: "width: 50px; height: 50px;"}
+                %i.fas.fa-user.text-white
+            
+            %h6.card-title.mb-1= follower.display_name_or_username
+            - if follower.display_name.present? && follower.display_name != follower.username
+              %small.text-muted @#{follower.username}
+            
+            .btn-group.mt-2.w-100{role: "group"}
+              = link_to "詳細", follower, class: "btn btn-outline-primary btn-sm"
+              - unless follower == current_user
+                - if current_user.following?(follower)
+                  = link_to "フォロー中", user_follow_path(follower), 
+                            method: :delete, 
+                            class: "btn btn-success btn-sm",
+                            confirm: "#{follower.display_name_or_username}さんのフォローを解除しますか？"
+                - else
+                  = link_to "フォロー", user_follow_path(follower), 
+                            method: :post, 
+                            class: "btn btn-outline-success btn-sm"
+
+  .d-flex.justify-content-center.mt-4
+    = paginate @followers if respond_to?(:paginate)
+
+- else
+  .text-center.mt-5
+    .card.mx-auto{style: "max-width: 500px;"}
+      .card-body.py-5
+        %i.fas.fa-user-friends.fa-3x.text-muted.mb-3
+        %h5.card-title まだフォロワーがいません
+        %p.card-text.text-muted
+          #{@user.display_name_or_username}さんのフォロワーが増えるまでお待ちください

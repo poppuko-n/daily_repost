@@ -1,0 +1,54 @@
+- content_for :title, "#{@user.display_name_or_username}さんがフォロー中"
+
+.d-flex.justify-content-between.align-items-center.mb-4
+  %h1.h4
+    %i.fas.fa-user-check.me-2
+    #{@user.display_name_or_username}さんがフォロー中
+    %span.badge.bg-primary.ms-2= @following.total_count if respond_to?(:total_count)
+  = link_to "#{@user.display_name_or_username}さんのプロフィール", @user, class: "btn btn-outline-secondary"
+
+- if @following.any?
+  .row
+    - @following.each do |following_user|
+      .col-md-6.col-lg-4.mb-3
+        .card
+          .card-body.text-center.py-3
+            - if following_user.avatar_url.present?
+              %img.rounded-circle.mb-2{src: following_user.avatar_url, alt: following_user.display_name_or_username, width: 50, height: 50}
+            - else
+              %div.bg-secondary.rounded-circle.d-inline-flex.align-items-center.justify-content-center.mb-2{style: "width: 50px; height: 50px;"}
+                %i.fas.fa-user.text-white
+            
+            %h6.card-title.mb-1= following_user.display_name_or_username
+            - if following_user.display_name.present? && following_user.display_name != following_user.username
+              %small.text-muted @#{following_user.username}
+            
+            .btn-group.mt-2.w-100{role: "group"}
+              = link_to "詳細", following_user, class: "btn btn-outline-primary btn-sm"
+              - unless following_user == current_user
+                - if current_user.following?(following_user)
+                  = link_to "フォロー中", user_follow_path(following_user), 
+                            method: :delete, 
+                            class: "btn btn-success btn-sm",
+                            confirm: "#{following_user.display_name_or_username}さんのフォローを解除しますか？"
+                - else
+                  = link_to "フォロー", user_follow_path(following_user), 
+                            method: :post, 
+                            class: "btn btn-outline-success btn-sm"
+
+  .d-flex.justify-content-center.mt-4
+    = paginate @following if respond_to?(:paginate)
+
+- else
+  .text-center.mt-5
+    .card.mx-auto{style: "max-width: 500px;"}
+      .card-body.py-5
+        %i.fas.fa-user-plus.fa-3x.text-muted.mb-3
+        %h5.card-title まだ誰もフォローしていません
+        %p.card-text.text-muted
+          - if @user == current_user
+            他のユーザーをフォローして、タイムラインを充実させましょう
+            %br
+            = link_to "ユーザーを探す", users_path, class: "btn btn-primary mt-2"
+          - else
+            #{@user.display_name_or_username}さんがユーザーをフォローするまでお待ちください

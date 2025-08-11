@@ -1,0 +1,64 @@
+- content_for :title, "プロフィール編集"
+
+.row.justify-content-center
+  .col-md-8.col-lg-6
+    .card
+      .card-header.bg-info.text-white
+        %h4.mb-0
+          %i.fas.fa-user-edit.me-2
+          プロフィール編集
+      
+      .card-body
+        = form_with model: @user, url: profile_path, method: :patch, local: true do |f|
+          - if @user.errors.any?
+            .alert.alert-danger
+              %h6 入力にエラーがあります：
+              %ul.mb-0
+                - @user.errors.full_messages.each do |message|
+                  %li= message
+          
+          .mb-3
+            = f.label :username, "ユーザー名", class: "form-label required"
+            = f.text_field :username, class: "form-control", required: true
+            .form-text 
+              2-20文字、英数字とアンダースコアのみ使用可能
+              (例: user123, daily_learner)
+          
+          .mb-3
+            = f.label :display_name, "表示名", class: "form-label"
+            = f.text_field :display_name, class: "form-control"
+            .form-text 
+              最大50文字。空の場合はユーザー名が表示されます
+          
+          .mb-3
+            = f.label :bio, "自己紹介", class: "form-label"
+            = f.text_area :bio, class: "form-control", rows: 4, 
+                          placeholder: "あなたについて教えてください..."
+            .form-text 最大500文字
+          
+          .mb-4
+            = f.label :avatar_url, "プロフィール画像URL", class: "form-label"
+            = f.url_field :avatar_url, class: "form-control", 
+                          placeholder: "https://example.com/your-image.jpg"
+            .form-text 
+              プロフィール画像のURLを入力してください（任意）
+              
+          .mb-3
+            %h6 現在のプロフィール プレビュー
+            .border.p-3.rounded.bg-light.text-center
+              - if @user.avatar_url.present?
+                %img.rounded-circle.mb-2{src: @user.avatar_url, alt: @user.display_name_or_username, width: 60, height: 60}
+              - else
+                %div.bg-secondary.rounded-circle.d-inline-flex.align-items-center.justify-content-center.mb-2{style: "width: 60px; height: 60px;"}
+                  %i.fas.fa-user.fa-2x.text-white
+              %div
+                %strong= @user.display_name_or_username
+                - if @user.display_name.present? && @user.display_name != @user.username
+                  %small.text-muted.d-block @#{@user.username}
+              - if @user.bio.present?
+                %p.small.text-muted.mt-2.mb-0= truncate(@user.bio, length: 100)
+      
+      .card-footer.bg-light
+        .d-flex.justify-content-between
+          = link_to "マイ日報に戻る", daily_reports_path, class: "btn btn-outline-secondary"
+          = f.submit "更新する", class: "btn btn-info"

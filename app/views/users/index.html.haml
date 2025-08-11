@@ -1,0 +1,80 @@
+- content_for :title, "ユーザー一覧"
+
+.d-flex.justify-content-between.align-items-center.mb-4
+  %h1.h2 ユーザー一覧
+  
+.row.mb-4
+  .col-md-6
+    = form_with url: users_path, method: :get, local: true, class: "d-flex" do |f|
+      = f.text_field :search, value: params[:search], 
+                     class: "form-control me-2", 
+                     placeholder: "ユーザー名で検索..."
+      = f.submit "検索", class: "btn btn-outline-primary"
+      
+  .col-md-6.text-md-end
+    %small.text-muted
+      = @users.total_count if respond_to?(:total_count)
+      件のユーザーが見つかりました
+
+- if @users.any?
+  .row
+    - @users.each do |user|
+      .col-md-6.col-lg-4.mb-4
+        .card.h-100
+          .card-body.text-center
+            - if user.avatar_url.present?
+              %img.rounded-circle.mb-3{src: user.avatar_url, alt: user.display_name_or_username, width: 80, height: 80}
+            - else
+              %div.bg-secondary.rounded-circle.d-inline-flex.align-items-center.justify-content-center.mb-3{style: "width: 80px; height: 80px;"}
+                %i.fas.fa-user.fa-2x.text-white
+            
+            %h5.card-title.mb-1= user.display_name_or_username
+            - if user.display_name.present? && user.display_name != user.username
+              %small.text-muted @#{user.username}
+            
+            - if user.bio.present?
+              %p.card-text.small.text-muted.mt-2
+                = truncate(user.bio, length: 80)
+            
+            .row.text-center.mt-3.mb-3
+              .col-4
+                %small.text-muted フォロー
+                %div.fw-bold= user.following.count
+              .col-4
+                %small.text-muted フォロワー
+                %div.fw-bold= user.followers.count
+              .col-4
+                %small.text-muted 日報
+                %div.fw-bold= user.daily_reports.public_reports.count
+          
+          .card-footer.bg-transparent.border-0.text-center
+            .btn-group.w-100{role: "group"}
+              = link_to "詳細", user, class: "btn btn-outline-primary btn-sm"
+              - if current_user.following?(user)
+                = link_to "フォロー中", user_follow_path(user), 
+                          method: :delete, 
+                          class: "btn btn-success btn-sm",
+                          confirm: "#{user.display_name_or_username}さんのフォローを解除しますか？"
+              - else
+                = link_to "フォロー", user_follow_path(user), 
+                          method: :post, 
+                          class: "btn btn-outline-success btn-sm"
+
+  .d-flex.justify-content-center.mt-4
+    = paginate @users if respond_to?(:paginate)
+
+- else
+  .text-center.mt-5
+    .card.mx-auto{style: "max-width: 500px;"}
+      .card-body.py-5
+        %i.fas.fa-users.fa-3x.text-muted.mb-3
+        %h5.card-title 
+          - if params[:search].present?
+            「#{params[:search]}」に一致するユーザーが見つかりません
+          - else
+            まだユーザーがいません
+        %p.card-text.text-muted
+          - if params[:search].present?
+            別のキーワードで検索してみてください
+          - else
+            新しいユーザーが登録されるまでお待ちください
