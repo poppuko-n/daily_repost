@@ -8,3 +8,41 @@
  *
  * Consider organizing styles into separate files for maintainability.
  */
+
+@import "bootstrap";
+
+/* カスタムスタイル */
+body {
+  background-color: #f8f9fa;
+}
+
+.card {
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  border: none;
+}
+
+.navbar-brand {
+  font-weight: bold;
+}
+
+.daily-report-card {
+  transition: transform 0.2s;
+}
+
+.daily-report-card:hover {
+  transform: translateY(-2px);
+}
+
+.btn-outline-primary {
+  border-width: 2px;
+}
+
+.form-label {
+  font-weight: 600;
+  color: #495057;
+}
+
+.alert {
+  border: none;
+  border-radius: 8px;
+}
