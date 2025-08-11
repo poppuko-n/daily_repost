@@ -45,6 +45,10 @@ class DailyReport < ApplicationRecord
            .distinct
            .limit(limit)
   end
+
+  def status_text
+    is_public? ? "公開" : "非公開"
+  end
   
   private
   
@@ -70,12 +74,6 @@ class DailyReport < ApplicationRecord
     
     keywords.uniq.take(5) # 最大5個のキーワード
   end
-
-  def status_text
-    is_public? ? "公開" : "非公開"
-  end
-
-  private
 
   def date_not_in_future
     return unless date.present?
