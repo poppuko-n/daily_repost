@@ -19,11 +19,11 @@
         
         .row.text-center.mb-4
           .col-4
-            = link_to user_following_path(@user), class: "text-decoration-none text-dark" do
+            = link_to following_user_path(@user), class: "text-decoration-none text-dark" do
               %div.fw-bold.fs-4= @user.following.count
               %small.text-muted フォロー
           .col-4
-            = link_to user_followers_path(@user), class: "text-decoration-none text-dark" do
+            = link_to followers_user_path(@user), class: "text-decoration-none text-dark" do
               %div.fw-bold.fs-4= @user.followers.count
               %small.text-muted フォロワー
           .col-4
@@ -33,14 +33,13 @@
         - unless @user == current_user
           .d-grid
             - if current_user.following?(@user)
-              = link_to "フォロー中", user_follow_path(@user), 
-                        method: :delete, 
+              = link_to "フォロー中", follow_path(@user), 
                         class: "btn btn-success",
-                        confirm: "#{@user.display_name_or_username}さんのフォローを解除しますか？"
+                        data: { turbo_method: :delete, turbo_confirm: "#{@user.display_name_or_username}さんのフォローを解除しますか？" }
             - else
-              = link_to "フォローする", user_follow_path(@user), 
-                        method: :post, 
-                        class: "btn btn-primary"
+              = link_to "フォローする", follows_path(user_id: @user.id), 
+                        class: "btn btn-primary",
+                        data: { turbo_method: :post }
 
   .col-lg-8
     .d-flex.justify-content-between.align-items-center.mb-3

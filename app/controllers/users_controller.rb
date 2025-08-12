@@ -1,5 +1,5 @@
 class UsersController < ApplicationController
-  before_action :set_user, only: [:show, :follow, :unfollow, :followers, :following]
+  before_action :set_user, only: [:show, :followers, :following]
 
   def index
     @users = User.where.not(id: current_user.id)
@@ -17,18 +17,6 @@ class UsersController < ApplicationController
                           .page(params[:page]).per(10)
   end
 
-  def follow
-    if current_user.follow(@user)
-      redirect_back(fallback_location: @user, notice: "#{@user.display_name_or_username}さんをフォローしました。")
-    else
-      redirect_back(fallback_location: @user, alert: "フォローできませんでした。")
-    end
-  end
-
-  def unfollow
-    current_user.unfollow(@user)
-    redirect_back(fallback_location: @user, notice: "#{@user.display_name_or_username}さんのフォローを解除しました。")
-  end
 
   def followers
     @followers = @user.followers.order(:username).page(params[:page]).per(20)

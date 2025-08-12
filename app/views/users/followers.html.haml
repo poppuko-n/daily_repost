@@ -27,14 +27,13 @@
               = link_to "詳細", follower, class: "btn btn-outline-primary btn-sm"
               - unless follower == current_user
                 - if current_user.following?(follower)
-                  = link_to "フォロー中", user_follow_path(follower), 
-                            method: :delete, 
+                  = link_to "フォロー中", follow_path(follower), 
                             class: "btn btn-success btn-sm",
-                            confirm: "#{follower.display_name_or_username}さんのフォローを解除しますか？"
+                            data: { turbo_method: :delete, turbo_confirm: "#{follower.display_name_or_username}さんのフォローを解除しますか？" }
                 - else
-                  = link_to "フォロー", user_follow_path(follower), 
-                            method: :post, 
-                            class: "btn btn-outline-success btn-sm"
+                  = link_to "フォロー", follows_path(user_id: follower.id), 
+                            class: "btn btn-outline-success btn-sm",
+                            data: { turbo_method: :post }
 
   .d-flex.justify-content-center.mt-4
     = paginate @followers if respond_to?(:paginate)

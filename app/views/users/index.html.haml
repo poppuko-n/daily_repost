@@ -51,14 +51,13 @@
             .btn-group.w-100{role: "group"}
               = link_to "詳細", user, class: "btn btn-outline-primary btn-sm"
               - if current_user.following?(user)
-                = link_to "フォロー中", user_follow_path(user), 
-                          method: :delete, 
+                = link_to "フォロー中", follow_path(user), 
                           class: "btn btn-success btn-sm",
-                          confirm: "#{user.display_name_or_username}さんのフォローを解除しますか？"
+                          data: { turbo_method: :delete, turbo_confirm: "#{user.display_name_or_username}さんのフォローを解除しますか？" }
               - else
-                = link_to "フォロー", user_follow_path(user), 
-                          method: :post, 
-                          class: "btn btn-outline-success btn-sm"
+                = link_to "フォロー", follows_path(user_id: user.id), 
+                          class: "btn btn-outline-success btn-sm",
+                          data: { turbo_method: :post }
 
   .d-flex.justify-content-center.mt-4
     = paginate @users if respond_to?(:paginate)
