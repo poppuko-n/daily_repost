@@ -3,8 +3,10 @@ class DailyReportsController < ApplicationController
   before_action :check_owner, only: [:edit, :update, :destroy]
 
   def index
-    @daily_reports = current_user.daily_reports.recent.page(params[:page]).per(20)
-    @daily_reports = @daily_reports.by_date_range(params[:start_date], params[:end_date]) if params[:start_date].present? && params[:end_date].present?
+    @daily_reports = current_user.daily_reports
+                                 .recent
+                                 .by_date_range(params[:start_date], params[:end_date])
+                                 .page(params[:page]).per(20)
   end
 
   def show
