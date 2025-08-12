@@ -8,8 +8,8 @@
           %i.fas.fa-user-edit.me-2
           プロフィール編集
       
-      .card-body
-        = form_with model: @user, url: profile_path, method: :patch, local: true do |f|
+      = form_with model: @user, url: profile_path, method: :patch, local: true do |f|
+        .card-body
           - if @user.errors.any?
             .alert.alert-danger
               %h6 入力にエラーがあります：
@@ -57,8 +57,8 @@
                   %small.text-muted.d-block @#{@user.username}
               - if @user.bio.present?
                 %p.small.text-muted.mt-2.mb-0= truncate(@user.bio, length: 100)
-      
-      .card-footer.bg-light
-        .d-flex.justify-content-between
-          = link_to "マイ日報に戻る", daily_reports_path, class: "btn btn-outline-secondary"
-          = f.submit "更新する", class: "btn btn-info"
+        
+        .card-footer.bg-light
+          .d-flex.justify-content-between
+            = link_to "マイ日報に戻る", daily_reports_path, class: "btn btn-outline-secondary"
+            = f.submit "更新する", class: "btn btn-info"

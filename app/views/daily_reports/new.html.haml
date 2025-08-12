@@ -8,8 +8,8 @@
           %i.fas.fa-plus-circle.me-2
           新しい日報を作成
       
-      .card-body
-        = form_with model: @daily_report, local: true do |f|
+      = form_with model: @daily_report, local: true do |f|
+        .card-body
           - if @daily_report.errors.any?
             .alert.alert-danger
               %h6 入力にエラーがあります：
@@ -45,8 +45,8 @@
               = f.check_box :is_public, class: "form-check-input", checked: true
               = f.label :is_public, "この日報を公開する", class: "form-check-label"
               .form-text 公開すると他のユーザーも閲覧できるようになります
-      
-      .card-footer.bg-light
-        .d-flex.justify-content-between
-          = link_to "戻る", daily_reports_path, class: "btn btn-outline-secondary"
-          = f.submit "日報を作成", class: "btn btn-primary"
+        
+        .card-footer.bg-light
+          .d-flex.justify-content-between
+            = link_to "戻る", daily_reports_path, class: "btn btn-outline-secondary"
+            = f.submit "日報を作成", class: "btn btn-primary"

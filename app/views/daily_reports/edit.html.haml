@@ -9,8 +9,8 @@
           日報を編集
           %small.text-muted= @daily_report.date.strftime("（%Y年%m月%d日）")
       
-      .card-body
-        = form_with model: @daily_report, local: true do |f|
+      = form_with model: @daily_report, local: true do |f|
+        .card-body
           - if @daily_report.errors.any?
             .alert.alert-danger
               %h6 入力にエラーがあります：
@@ -46,8 +46,8 @@
               = f.check_box :is_public, class: "form-check-input"
               = f.label :is_public, "この日報を公開する", class: "form-check-label"
               .form-text 公開すると他のユーザーも閲覧できるようになります
-      
-      .card-footer.bg-light
-        .d-flex.justify-content-between
-          = link_to "戻る", @daily_report, class: "btn btn-outline-secondary"
-          = f.submit "更新する", class: "btn btn-warning"
+        
+        .card-footer.bg-light
+          .d-flex.justify-content-between
+            = link_to "戻る", @daily_report, class: "btn btn-outline-secondary"
+            = f.submit "更新する", class: "btn btn-warning"
