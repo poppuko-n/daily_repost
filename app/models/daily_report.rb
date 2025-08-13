@@ -20,7 +20,7 @@ class DailyReport < ApplicationRecord
     where("learned_points LIKE ? OR learned_points LIKE ? OR learned_points LIKE ?", 
           "%#{keyword}%", "%#{keyword.tr('ァ-ヶ', 'ｦ-ﾟ')}%", "%#{keyword.tr('ｦ-ﾟ', 'ァ-ヶ')}%")
   }
-  scope :excluding, ->(report) { where.not(id: report.id) }
+  scope :exclude_report, ->(report) { where.not(id: report.id) }
   scope :related_to_keywords, ->(keywords) {
     return none if keywords.empty?
     conditions = keywords.map { "learned_points LIKE ?" }
@@ -38,7 +38,7 @@ class DailyReport < ApplicationRecord
     return DailyReport.none if keywords.empty?
     
     DailyReport.related_to_keywords(keywords)
-               .excluding(self)
+               .exclude_report(self)
                .limit(limit)
   end
 
