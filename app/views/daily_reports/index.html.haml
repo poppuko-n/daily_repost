@@ -2,7 +2,9 @@
 
 .d-flex.justify-content-between.align-items-center.mb-4
   %h1.h2 マイ日報
-  = link_to "新しい日報を作成", new_daily_report_path, class: "btn btn-primary"
+  %button.btn.btn-primary{"data-bs-toggle": "modal", "data-bs-target": "#newReportModal"}
+    %i.fas.fa-plus.me-2
+    新しい日報を作成
 
 .row.mb-3
   .col-md-8
@@ -52,4 +54,6 @@
         %i.fas.fa-calendar-alt.fa-3x.text-muted.mb-3
         %h5.card-title まだ日報がありません
         %p.card-text.text-muted 最初の日報を作成して、学習の記録を始めましょう！
-        = link_to "日報を作成する", new_daily_report_path, class: "btn btn-primary"
+        %button.btn.btn-primary{"data-bs-toggle": "modal", "data-bs-target": "#newReportModal"}
+          %i.fas.fa-plus.me-2
+          日報を作成する
