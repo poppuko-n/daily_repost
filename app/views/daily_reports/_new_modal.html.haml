@@ -1,12 +1,12 @@
-#newReportModal.modal.fade{"data-controller": "modal", "data-modal-modal-target": "modal", tabindex: "-1", "aria-labelledby": "newReportModalLabel", "aria-hidden": "true"}
+#newReportModal.modal.fade{tabindex: "-1", "aria-labelledby": "newReportModalLabel", "aria-hidden": "true"}
   .modal-dialog.modal-lg
     .modal-content
-      = form_with model: DailyReport.new, url: daily_reports_path, local: true, id: "newReportForm", data: { modal_form_target: "form" } do |f|
+      = form_with model: DailyReport.new, url: daily_reports_path, local: true, id: "newReportForm" do |f|
         .modal-header.bg-primary.text-white
           %h5.modal-title#newReportModalLabel
             %i.fas.fa-plus-circle.me-2
             新しい日報を作成
-          %button.btn-close.btn-close-white{type: "button", "data-bs-dismiss": "modal", "aria-label": "Close", "data-action": "click->modal#resetForm"}
+          %button.btn-close.btn-close-white{type: "button", "data-bs-dismiss": "modal", "aria-label": "Close"}
         
         .modal-body
           .mb-3
@@ -39,5 +39,5 @@
               .form-text 公開すると他のユーザーも閲覧できるようになります
         
         .modal-footer.bg-light
-          %button.btn.btn-outline-secondary{type: "button", "data-bs-dismiss": "modal", "data-action": "click->modal#resetForm"} キャンセル
+          %button.btn.btn-outline-secondary{type: "button", "data-bs-dismiss": "modal"} キャンセル
           = f.submit "日報を作成", class: "btn btn-primary"
