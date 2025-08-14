@@ -14,7 +14,7 @@ class DailyReportsController < ApplicationController
   end
 
   def new
-    @daily_report = current_user.daily_reports.build(date: Date.current)
+    redirect_to daily_reports_path
   end
 
   def create
@@ -23,7 +23,7 @@ class DailyReportsController < ApplicationController
     if @daily_report.save
       redirect_to @daily_report, notice: '日報が作成されました。'
     else
-      render :new
+      redirect_to daily_reports_path, alert: '日報の作成に失敗しました。入力内容を確認してください。'
     end
   end
 

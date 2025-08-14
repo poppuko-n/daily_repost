@@ -1,0 +1,43 @@
+#newReportModal.modal.fade{"data-controller": "modal", "data-modal-modal-target": "modal", tabindex: "-1", "aria-labelledby": "newReportModalLabel", "aria-hidden": "true"}
+  .modal-dialog.modal-lg
+    .modal-content
+      = form_with model: DailyReport.new, url: daily_reports_path, local: true, id: "newReportForm", data: { modal_form_target: "form" } do |f|
+        .modal-header.bg-primary.text-white
+          %h5.modal-title#newReportModalLabel
+            %i.fas.fa-plus-circle.me-2
+            新しい日報を作成
+          %button.btn-close.btn-close-white{type: "button", "data-bs-dismiss": "modal", "aria-label": "Close", "data-action": "click->modal#resetForm"}
+        
+        .modal-body
+          .mb-3
+            = f.label :date, "日付", class: "form-label required"
+            = f.date_field :date, class: "form-control", required: true, value: Date.current
+            .form-text 日報を書く日付を選択してください
+          
+          .mb-3
+            = f.label :work_content, "作業内容", class: "form-label required"
+            = f.text_area :work_content, class: "form-control", rows: 4, required: true, 
+                          placeholder: "今日取り組んだ作業内容を記入してください..."
+            .form-text 最大2000文字
+          
+          .mb-3
+            = f.label :learned_points, "学んだ点", class: "form-label required"
+            = f.text_area :learned_points, class: "form-control", rows: 3, required: true, 
+                          placeholder: "今日新しく学んだことや気づいたことを記入してください..."
+            .form-text 最大2000文字（関連日報の検索に使用されます）
+          
+          .mb-3
+            = f.label :improvements, "もっとよくできる点", class: "form-label required"
+            = f.text_area :improvements, class: "form-control", rows: 3, required: true, 
+                          placeholder: "改善できる点や次回気をつけたいことを記入してください..."
+            .form-text 最大2000文字
+          
+          .mb-3
+            .form-check
+              = f.check_box :is_public, class: "form-check-input", checked: true
+              = f.label :is_public, "この日報を公開する", class: "form-check-label"
+              .form-text 公開すると他のユーザーも閲覧できるようになります
+        
+        .modal-footer.bg-light
+          %button.btn.btn-outline-secondary{type: "button", "data-bs-dismiss": "modal", "data-action": "click->modal#resetForm"} キャンセル
+          = f.submit "日報を作成", class: "btn btn-primary"
