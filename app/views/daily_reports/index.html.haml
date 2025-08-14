@@ -17,19 +17,13 @@
         .col-md-3
           = f.label :start_date, "開始日", class: "form-label small"
           = f.date_field :start_date, value: params[:start_date], class: "form-control"
-          .form-text この日以降の日報
         .col-md-3
           = f.label :end_date, "終了日", class: "form-label small"
           = f.date_field :end_date, value: params[:end_date], class: "form-control"
-          .form-text この日以前の日報
-        .col-md-3
+        .col-md-6
           .d-grid.gap-2.d-md-block
             = f.submit "絞り込み", class: "btn btn-primary"
             = link_to "リセット", daily_reports_path, class: "btn btn-outline-secondary"
-        .col-md-3
-          .text-muted.small
-            %i.fas.fa-info-circle.me-1
-            どちらか一方だけでも検索可能です
 
 - if @daily_reports.any?
   .d-flex.justify-content-between.align-items-center.mb-3
