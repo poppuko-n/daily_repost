@@ -6,33 +6,8 @@
     %i.fas.fa-plus.me-2
     新しい日報を作成
 
-.card.mb-4
-  .card-header.bg-light
-    %h6.mb-0
-      %i.fas.fa-filter.me-2
-      日付で絞り込み
-  .card-body.py-3
-    = form_with url: daily_reports_path, method: :get, local: true do |f|
-      .row.g-3.align-items-end
-        .col-md-3
-          = f.label :start_date, "開始日", class: "form-label small"
-          = f.date_field :start_date, value: params[:start_date], class: "form-control"
-        .col-md-3
-          = f.label :end_date, "終了日", class: "form-label small"
-          = f.date_field :end_date, value: params[:end_date], class: "form-control"
-        .col-md-6
-          .d-grid.gap-2.d-md-block
-            = f.submit "絞り込み", class: "btn btn-primary"
-            = link_to "リセット", daily_reports_path, class: "btn btn-outline-secondary"
 
 - if @daily_reports.any?
-  .d-flex.justify-content-between.align-items-center.mb-3
-    %h5.mb-0
-      検索結果: #{@daily_reports.count}件の日報
-      - if params[:start_date].present? || params[:end_date].present?
-        %small.text-muted
-          （絞り込み中）
-    
   .row
     - @daily_reports.each do |report|
       .col-md-6.col-lg-4.mb-4
@@ -62,29 +37,14 @@
                           confirm: "本当に削除しますか？", 
                           class: "btn btn-outline-danger btn-sm"
 
-  .d-flex.justify-content-center.mt-4
-    = paginate @daily_reports if respond_to?(:paginate)
 
 - else
   .text-center.mt-5
     .card.mx-auto{style: "max-width: 500px;"}
       .card-body.py-5
-        - if params[:start_date].present? || params[:end_date].present?
-          %i.fas.fa-search.fa-3x.text-muted.mb-3
-          %h5.card-title 該当する日報がありません
-          %p.card-text.text-muted
-            指定した期間に日報が見つかりませんでした。
-            %br
-            検索条件を変更するか、新しい日報を作成してください。
-          .d-grid.gap-2.d-md-flex.justify-content-md-center
-            = link_to "検索条件をリセット", daily_reports_path, class: "btn btn-outline-secondary"
-            %button.btn.btn-primary{"data-bs-toggle": "modal", "data-bs-target": "#newReportModal"}
-              %i.fas.fa-plus.me-2
-              日報を作成する
-        - else
-          %i.fas.fa-calendar-alt.fa-3x.text-muted.mb-3
-          %h5.card-title まだ日報がありません
-          %p.card-text.text-muted 最初の日報を作成して、学習の記録を始めましょう！
-          %button.btn.btn-primary{"data-bs-toggle": "modal", "data-bs-target": "#newReportModal"}
-            %i.fas.fa-plus.me-2
-            日報を作成する
+        %i.fas.fa-calendar-alt.fa-3x.text-muted.mb-3
+        %h5.card-title まだ日報がありません
+        %p.card-text.text-muted 最初の日報を作成して、学習の記録を始めましょう！
+        %button.btn.btn-primary{"data-bs-toggle": "modal", "data-bs-target": "#newReportModal"}
+          %i.fas.fa-plus.me-2
+          日報を作成する

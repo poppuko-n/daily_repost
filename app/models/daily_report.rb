@@ -11,19 +11,6 @@ class DailyReport < ApplicationRecord
   scope :public_reports, -> { where(is_public: true) }
   scope :private_reports, -> { where(is_public: false) }
   scope :recent, -> { order(date: :desc) }
-  scope :by_date_range, ->(start_date, end_date) { 
-    return all if start_date.blank? && end_date.blank?
-    
-    if start_date.present? && end_date.present?
-      where(date: start_date..end_date)
-    elsif start_date.present?
-      where("date >= ?", start_date)
-    elsif end_date.present?
-      where("date <= ?", end_date)
-    else
-      all
-    end
-  }
   scope :search_learned_points, ->(keyword) { 
     return none if keyword.blank?
     where("learned_points LIKE ? OR learned_points LIKE ? OR learned_points LIKE ?", 
