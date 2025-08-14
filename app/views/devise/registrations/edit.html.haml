@@ -1,0 +1,67 @@
+- content_for :title, "アカウント設定"
+
+.row.justify-content-center
+  .col-md-8.col-lg-6
+    .card
+      .card-header.bg-warning.text-dark
+        %h4.mb-0
+          %i.fas.fa-cog.me-2
+          アカウント設定
+
+      <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put }) do |f| %>
+        .card-body
+          <%= render "devise/shared/error_messages", resource: resource %>
+
+          .mb-3
+            <%= f.label :email, "メールアドレス", class: "form-label required" %>
+            <%= f.email_field :email, autofocus: true, autocomplete: "email", class: "form-control" %>
+
+          <% if devise_mapping.confirmable? && resource.pending_reconfirmation? %>
+            .alert.alert-info
+              %i.fas.fa-info-circle.me-2
+              確認待ち: <%= resource.unconfirmed_email %>
+          <% end %>
+
+          .mb-3
+            <%= f.label :password, "新しいパスワード", class: "form-label" %>
+            <%= f.password_field :password, autocomplete: "new-password", class: "form-control" %>
+            .form-text
+              変更しない場合は空のままにしてください
+              <% if @minimum_password_length %>
+                （最低<%= @minimum_password_length %>文字）
+              <% end %>
+
+          .mb-3
+            <%= f.label :password_confirmation, "新しいパスワード（確認）", class: "form-label" %>
+            <%= f.password_field :password_confirmation, autocomplete: "new-password", class: "form-control" %>
+
+          .mb-4
+            <%= f.label :current_password, "現在のパスワード", class: "form-label required" %>
+            <%= f.password_field :current_password, autocomplete: "current-password", class: "form-control" %>
+            .form-text
+              変更を確認するため、現在のパスワードが必要です
+
+        .card-footer.bg-light
+          .d-flex.justify-content-between
+            <%= link_to "戻る", :back, class: "btn btn-outline-secondary" %>
+            <%= f.submit "更新する", class: "btn btn-warning" %>
+      <% end %>
+
+    .card.mt-4.border-danger
+      .card-header.bg-danger.text-white
+        %h5.mb-0
+          %i.fas.fa-exclamation-triangle.me-2
+          アカウント削除
+
+      .card-body
+        %p.text-muted
+          アカウントを削除すると、すべてのデータが完全に削除され、復元できません。
+        
+        .d-grid
+          <%= button_to "アカウントを削除する", registration_path(resource_name), 
+                        method: :delete, 
+                        class: "btn btn-danger",
+                        data: { 
+                          confirm: "本当にアカウントを削除しますか？この操作は取り消せません。", 
+                          turbo_confirm: "本当にアカウントを削除しますか？この操作は取り消せません。" 
+                        } %>

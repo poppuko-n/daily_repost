@@ -1,0 +1,8 @@
+<% if resource.errors.any? %>
+  .alert.alert-danger
+    %h6 入力にエラーがあります：
+    %ul.mb-0
+      <% resource.errors.full_messages.each do |message| %>
+        %li <%= message %>
+      <% end %>
+<% end %>
