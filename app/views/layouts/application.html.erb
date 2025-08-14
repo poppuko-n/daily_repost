@@ -66,6 +66,7 @@
                   </a>
                 </div>
                 <ul class="dropdown-menu">
+                  <li><%= link_to "プロフィール詳細", user_path(current_user), class: "dropdown-item" %></li>
                   <li><%= link_to "プロフィール編集", edit_profile_path, class: "dropdown-item" %></li>
                   <li><%= link_to "アカウント設定", edit_user_registration_path, class: "dropdown-item" %></li>
                   <li><hr class="dropdown-divider"></li>
