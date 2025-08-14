@@ -44,7 +44,7 @@
           
           %ul.navbar-nav
             - if user_signed_in?
-              %li.nav-item.dropdown{"data-controller": "dropdown"}
+              %li.nav-item.dropdown
                 %a.nav-link.dropdown-toggle{href: "#", id: "navbarDropdown", role: "button", "data-bs-toggle": "dropdown", "aria-expanded": "false"}
                   = current_user.display_name_or_username
                 %ul.dropdown-menu
