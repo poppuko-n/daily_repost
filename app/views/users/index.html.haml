@@ -10,11 +10,6 @@
                      class: "form-control me-2", 
                      placeholder: "ユーザー名で検索..."
       = f.submit "検索", class: "btn btn-outline-primary"
-      
-  .col-md-6.text-md-end
-    %small.text-muted
-      = @users.total_count if respond_to?(:total_count)
-      件のユーザーが見つかりました
 
 - if @users.any?
   .row
