@@ -12,6 +12,11 @@
       = f.submit "検索", class: "btn btn-outline-primary"
 
 - if @users.any?
+  - if params[:search].present?
+    .mb-3
+      %small.text-muted
+        「#{params[:search]}」の検索結果: #{@users.count}名のユーザーが見つかりました
+  
   .row
     - @users.each do |user|
       .col-md-6.col-lg-4.mb-4
